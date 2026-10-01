@@ -4,5 +4,5 @@ namespace Homework1.Application.Interfaces;
 
 public interface IOrderRepository
 {
-    IEnumerable<Order> GetByClientId(long clientID);
+    IEnumerable<Order> GetByClientId(long clientId);
 }

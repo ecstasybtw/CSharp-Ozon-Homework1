@@ -6,7 +6,7 @@ namespace Homework1.Infrastructure.Repositories;
 
 public class CsvOrderRepository : IOrderRepository
 {
-    private List<Order> _orders = new();
+    private readonly List<Order> _orders = new();
     private readonly string _csvPath;
 
     public CsvOrderRepository()
@@ -39,13 +39,13 @@ public class CsvOrderRepository : IOrderRepository
         }
     }
 
-    public IEnumerable<Order> GetByClientId(long clientID)
+    public IEnumerable<Order> GetByClientId(long clientId)
     {
         List<Order> ordersToReturn = new List<Order>();
 
         foreach (var order in _orders)
         {
-            if (order.ClientId == clientID)
+            if (order.ClientId == clientId)
             {
                 ordersToReturn.Add(order);
             }

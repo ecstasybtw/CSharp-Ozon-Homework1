@@ -1,4 +1,3 @@
-using System.Diagnostics.Metrics;
 using Homework1.Application.Exceptions;
 using Homework1.Application.Interfaces;
 using Homework1.Application.Models;
@@ -14,29 +13,29 @@ public class ReportService : IReportService
         _repository = repository;
     }
 
-    public ClientReport GetReport(long clientID)
+    public ClientReport GetReport(long clientId)
     {
-        IEnumerable<Order> clientOrders = _repository.GetByClientId(clientID);
+        IEnumerable<Order> clientOrders = _repository.GetByClientId(clientId);
 
         if (!clientOrders.Any())
         {
-            throw new ClientNotFoundException($"'Client with id {clientID} not found");
+            throw new ClientNotFoundException($"'Client with id {clientId} not found");
         }
 
         float totalPrice = clientOrders.Sum(order => order.ItemPrice * order.ItemQuantity);
 
-        string favouriteItem = GetClientsFavouriteItem(clientOrders);
+        string favouriteItem = GetFavouriteItemName(clientOrders);
 
         return new ClientReport
         {
-            ClientId = clientID,
+            ClientId = clientId,
             FavouriteItemName = favouriteItem,
             OrdersSum = totalPrice
         };
 
     }
 
-    private string GetClientsFavouriteItem(IEnumerable<Order> clientOrders)
+    private static string GetFavouriteItemName(IEnumerable<Order> clientOrders)
     {
         Dictionary<string, int> counterDict = new();
 
