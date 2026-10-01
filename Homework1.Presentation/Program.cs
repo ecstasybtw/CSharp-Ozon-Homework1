@@ -7,12 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-string csvPath = "orders_log.csv";
-
-services.AddSingleton<IOrderRepository>(
-    _ => new CsvOrderRepository(csvPath)
-);
-
+services.AddSingleton<IOrderRepository, CsvOrderRepository>();
 services.AddSingleton<IReportService, ReportService>();
 
 var serviceProvider = services.BuildServiceProvider();

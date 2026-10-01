@@ -9,9 +9,12 @@ public class CsvOrderRepository : IOrderRepository
     private List<Order> _orders = new();
     private readonly string _csvPath;
 
-    public CsvOrderRepository(string csvPath)
+    public CsvOrderRepository()
     {
-        _csvPath = csvPath;
+        _csvPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "orders_log.csv"
+        );
         ParseCsv();
     }
 
