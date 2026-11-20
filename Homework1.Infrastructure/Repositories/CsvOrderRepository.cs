@@ -24,17 +24,16 @@ public class CsvOrderRepository : IOrderRepository
         {
             string[] values = line.Split(',');
             _orders.Add(
-                new Order
-                {
-                    ClientId = long.Parse(values[0]),
-                    OrderId = long.Parse(values[1]),
-                    ItemName = values[2],
-                    ItemQuantity = int.Parse(values[3]),
-                    ItemPrice = float.Parse(
+                new Order(
+                    ClientId: long.Parse(values[0]),
+                    OrderId: long.Parse(values[1]),
+                    ItemName: values[2],
+                    ItemQuantity: int.Parse(values[3]),
+                    ItemPrice: float.Parse(
                         values[4],
                         CultureInfo.InvariantCulture
                     )
-                }
+                )
             );
         }
     }

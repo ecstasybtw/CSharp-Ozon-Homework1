@@ -15,7 +15,7 @@ public class ReportService : IReportService
 
     public ClientReport GetReport(long clientId)
     {
-        IEnumerable<Order> clientOrders = _repository.GetByClientId(clientId);
+        var clientOrders = _repository.GetByClientId(clientId);
 
         if (!clientOrders.Any())
         {
@@ -26,30 +26,29 @@ public class ReportService : IReportService
 
         string favouriteItem = GetFavouriteItemName(clientOrders);
 
-        return new ClientReport
-        {
-            ClientId = clientId,
-            FavouriteItemName = favouriteItem,
-            OrdersSum = totalPrice
-        };
+        return new ClientReport(
+            ClientId: clientId,
+            OrdersSum: totalPrice,
+            FavouriteItemName: favouriteItem
+        );
 
     }
 
     private static string GetFavouriteItemName(IEnumerable<Order> clientOrders)
     {
-        Dictionary<string, int> counterDict = new();
+        Dictionary<string, int> quantityByItemName = new();
 
         foreach (var order in clientOrders)
         {
-            if (!counterDict.ContainsKey(order.ItemName))
+            if (!quantityByItemName.ContainsKey(order.ItemName))
             {
-                counterDict[order.ItemName] = 0;
+                quantityByItemName[order.ItemName] = 0;
             }
             
-            counterDict[order.ItemName] += order.ItemQuantity;
+            quantityByItemName[order.ItemName] += order.ItemQuantity;
         }
         
-        var favouriteItem = counterDict
+        var favouriteItem = quantityByItemName
             .MaxBy(pair => pair.Value)
             .Key;
 
