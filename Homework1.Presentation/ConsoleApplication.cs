@@ -1,5 +1,6 @@
 using Homework1.Application.Exceptions;
 using Homework1.Application.Interfaces;
+using Homework1.Application.Models;
 
 namespace Homework1.Presentation;
 
@@ -7,11 +8,16 @@ public class ConsoleApplication
 {
     private readonly IReportService _reportService;
     private readonly ClientIdParser _parser;
+    private readonly IReportWriter _reportWriter;
 
-    public ConsoleApplication(IReportService reportService, ClientIdParser parser)
+    public ConsoleApplication(
+        IReportService reportService,
+        ClientIdParser parser,
+        IReportWriter reportWriter)
     {
         _reportService = reportService;
         _parser = parser;
+        _reportWriter = reportWriter;
     }
 
     public void Run()
@@ -22,6 +28,8 @@ public class ConsoleApplication
         {
             return;
         }
+
+        var reports = new List<ClientReport>();
 
         foreach (var result in _parser.Parse(input))
         {
@@ -35,14 +43,17 @@ public class ConsoleApplication
             {
                 var report = _reportService.GetReport(clientId);
 
-                Console.WriteLine(
-                    $"client_id: {report.ClientId}, orders_sum: {report.OrdersSum:F2}, favourite_item_name: {report.FavouriteItemName}"
-                );
+                reports.Add(report);
             }
             catch (ClientNotFoundException exception)
             {
                 Console.WriteLine(exception.Message);
             }
+        }
+
+        if (reports.Count > 0)
+        {
+            _reportWriter.Write(reports);
         }
     }
 }
